@@ -1,6 +1,5 @@
 package br.com.screenMach.service;
 
-import br.com.screenMach.model.DadosSerie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
