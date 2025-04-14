@@ -7,8 +7,10 @@ import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
     Scanner scanner = new Scanner(System.in);
@@ -44,6 +46,18 @@ public class Main {
                 listaTemporadas.forEach(System.out::println);
 
                 listaTemporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+                List<DadosEpisodios> listaEpisodios = listaTemporadas.stream()
+                                .flatMap(t -> t.episodios().stream())
+                                        .collect(Collectors.toList());
+
+                System.out.println("\n******************* \n\nTop 05 Episodios de " + nomeSerie + "\n");
+                listaEpisodios.stream()
+                        .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                            .sorted(Comparator.comparing(DadosEpisodios::avaliacao).reversed())
+                                .limit(5)
+                                    .forEach(System.out::println);
+                System.out.println("\n*******************");
 
                 System.out.println("Gostaria de digitar outra serie? [S/N]");
                 confere = scanner.nextLine().toUpperCase();
