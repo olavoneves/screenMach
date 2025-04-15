@@ -110,16 +110,16 @@ public class Main {
                 Map<Integer, Double> avaliacoesTemporadas = episodios.stream()
                         .filter(e -> e.getAvaliacao() > 0.0)
                                 .collect(Collectors.groupingBy(Episodios::getTemporada, Collectors.averagingDouble(Episodios::getAvaliacao)));
-                System.out.println(avaliacoesTemporadas);
+                System.out.println("\n" + avaliacoesTemporadas);
 
                 //
                 DoubleSummaryStatistics est = episodios.stream()
                         .filter(e -> e.getAvaliacao() > 0.0)
                                 .collect(Collectors.summarizingDouble(Episodios::getAvaliacao));
-                System.out.println("Quantidade: " + est.getCount() + " | Média: " + est.getAverage() + " | Pior episódio: " + est.getMin() + " | Melhor episódio: " + est.getMax());
+                System.out.printf("\nQuantidade: %d | Média: %.1f | Pior episódio: %.1f | Melhor episódio: %.1f", est.getCount(), est.getAverage(), est.getMin(), est.getMax());
 
                 // Dar continuidade no programa
-                System.out.println("Gostaria de digitar outra serie? [S/N]");
+                System.out.println("\nGostaria de digitar outra serie? [S/N]");
                 confere = scanner.nextLine().toUpperCase();
                 if (confere.equals("N")) {
                     System.out.println("Obrigado por interagir com a gente!");
