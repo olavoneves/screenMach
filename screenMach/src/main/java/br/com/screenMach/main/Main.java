@@ -3,6 +3,7 @@ package br.com.screenMach.main;
 import br.com.screenMach.model.DadosEpisodios;
 import br.com.screenMach.model.DadosSerie;
 import br.com.screenMach.model.DadosTemporadas;
+import br.com.screenMach.model.Episodios;
 import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
 
@@ -58,6 +59,12 @@ public class Main {
                                 .limit(5)
                                     .forEach(System.out::println);
                 System.out.println("\n*******************");
+
+                List<Episodios> episodios = listaTemporadas.stream()
+                        .flatMap(t -> t.episodios().stream()
+                                .map(d -> new Episodios(t.number(), d))).collect(Collectors.toList());
+
+                episodios.forEach(System.out::println);
 
                 System.out.println("Gostaria de digitar outra serie? [S/N]");
                 confere = scanner.nextLine().toUpperCase();
