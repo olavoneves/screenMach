@@ -62,6 +62,6 @@ public class Episodios {
 
     @Override
     public String toString() {
-        return "Titulo: " + titulo + " | Temporada: " + temporada + " | Avaliação: " + avaliacao + " | Data de lançamento: " + dataLancamento;
+        return "Episodio: " + titulo + " | Temporada: " + temporada + " | Avaliação: " + avaliacao + " | Data de lançamento: " + dataLancamento;
     }
 }

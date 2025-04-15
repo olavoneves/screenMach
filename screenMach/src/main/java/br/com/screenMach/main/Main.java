@@ -7,6 +7,8 @@ import br.com.screenMach.model.Episodios;
 import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -65,6 +67,18 @@ public class Main {
                                 .map(d -> new Episodios(t.number(), d))).collect(Collectors.toList());
 
                 episodios.forEach(System.out::println);
+
+                System.out.print("A partir de que ano você deseja ver os episodios? ");
+                var ano = scanner.nextInt();
+                scanner.nextLine();
+
+                LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+                DateTimeFormatter formataData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                episodios.stream()
+                                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+                                        .forEach(e -> System.out.println(
+                                                "Episodio: " + e.getTitulo() + " | Temporada: " + e.getTemporada() + " | Data de lançamento: " + e.getDataLancamento().format(formataData)
+                                        ));
 
                 System.out.println("Gostaria de digitar outra serie? [S/N]");
                 confere = scanner.nextLine().toUpperCase();
