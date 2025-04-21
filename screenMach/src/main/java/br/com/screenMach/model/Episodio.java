@@ -3,13 +3,13 @@ package br.com.screenMach.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class Episodios {
+public class Episodio {
     private String titulo;
     private Integer temporada;
     private Double avaliacao;
     private LocalDate dataLancamento;
 
-    public Episodios(Integer numberTemporada, DadosEpisodios dadosEpisodio) {
+    public Episodio(Integer numberTemporada, DadosEpisodios dadosEpisodio) {
         this.temporada = numberTemporada;
         this.titulo = dadosEpisodio.titulo();
         try {
@@ -28,7 +28,7 @@ public class Episodios {
         return titulo;
     }
 
-    public Episodios setTitulo(String titulo) {
+    public Episodio setTitulo(String titulo) {
         this.titulo = titulo;
         return this;
     }
@@ -37,7 +37,7 @@ public class Episodios {
         return temporada;
     }
 
-    public Episodios setTemporada(Integer temporada) {
+    public Episodio setTemporada(Integer temporada) {
         this.temporada = temporada;
         return this;
     }
@@ -46,7 +46,7 @@ public class Episodios {
         return avaliacao;
     }
 
-    public Episodios setAvaliacao(Double avaliacao) {
+    public Episodio setAvaliacao(Double avaliacao) {
         this.avaliacao = avaliacao;
         return this;
     }
@@ -55,7 +55,7 @@ public class Episodios {
         return dataLancamento;
     }
 
-    public Episodios setDataLancamento(LocalDate dataLancamento) {
+    public Episodio setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
         return this;
     }
