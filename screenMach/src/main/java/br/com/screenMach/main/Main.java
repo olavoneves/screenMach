@@ -14,7 +14,7 @@ public class Main {
     private ConverteDados converteDados = new ConverteDados();
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=2d6585";
-    private List<DadosSerie> listaDadosSerie = new ArrayList<>();
+    private List<DadosSerie> dadosSeries = new ArrayList<>();
 
 
     public void exibeMenu() {
@@ -54,7 +54,7 @@ public class Main {
 
     private void buscarSerie() {
         DadosSerie dadosSerie = getDadosSerie();
-        listaDadosSerie.add(dadosSerie);
+        dadosSeries.add(dadosSerie);
         System.out.println(dadosSerie);
     }
 
@@ -62,8 +62,7 @@ public class Main {
         System.out.println("Digite o nome da série para busca: ");
         var nomeSerie = scanner.nextLine();
         var json = consumoAPI.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
-        DadosSerie dadosSerie = converteDados.obterDados(json, DadosSerie.class);
-        return dadosSerie;
+        return converteDados.obterDados(json, DadosSerie.class);
     }
 
     private void buscarEpisodioPorSerie() {
@@ -84,11 +83,19 @@ public class Main {
 
     private void listaSeriesBuscadas() {
         List<Serie> listaSerie = new ArrayList<>();
-        listaSerie = listaDadosSerie.stream()
-                        .map(d -> new Serie(d))
-                                .collect(Collectors.toList());
+        listaSerie = dadosSeries.stream()
+                .filter(Objects::nonNull)
+                .map(d -> {
+                    try {
+                        return new Serie(d);
+                    } catch (Exception e) {
+                        System.err.println("Erro ao criar Série: " + e.getMessage());
+                        return null;
+                    }
+                })
+                .collect(Collectors.toList());
         listaSerie.stream()
-                .sorted(Comparator.comparing(Serie::getGenero))
+                .sorted(Comparator.comparing(Serie::getGenero, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .forEach(System.out::println);
     }
 }

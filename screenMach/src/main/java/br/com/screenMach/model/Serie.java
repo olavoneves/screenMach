@@ -1,11 +1,11 @@
 package br.com.screenMach.model;
 
+import br.com.screenMach.service.ConsultaChatAPI;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 public class Serie {
     private String titulo;
-    private Integer ano;
     private String lancamento;
     private Integer totalTemporadas;
     private Double avaliacao;
@@ -16,14 +16,13 @@ public class Serie {
 
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
-        this.ano = OptionalInt.of(Integer.parseInt(dadosSerie.ano())).orElse(0);
         this.lancamento = dadosSerie.lancamento();
         this.totalTemporadas = dadosSerie.totalTemporadas();
         this.avaliacao = OptionalDouble.of(Double.parseDouble(dadosSerie.avaliacao())).orElse(0);
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
         this.imagem = dadosSerie.imagem();
-        this.sinopse = dadosSerie.sinopse();
+        // this.sinopse = ConsultaChatAPI.obterTraducao(dadosSerie.sinopse()).trim();
     }
 
     public String getTitulo() {
@@ -32,15 +31,6 @@ public class Serie {
 
     public Serie setTitulo(String titulo) {
         this.titulo = titulo;
-        return this;
-    }
-
-    public Integer getAno() {
-        return ano;
-    }
-
-    public Serie setAno(Integer ano) {
-        this.ano = ano;
         return this;
     }
 
@@ -109,9 +99,10 @@ public class Serie {
 
     @Override
     public String toString() {
-        return  "Genero= " + genero  +
+        return
+                "Genero= " + genero  +
                 ", Titulo= " + titulo  +
-                ", Ano= " + ano + ", lancamento='" + lancamento  +
+                ", lancamento= " + lancamento  +
                 ", Total Temporadas= " + totalTemporadas  +
                 ", Avaliacao= " + avaliacao  +
                 ", Atores= " + atores  +
