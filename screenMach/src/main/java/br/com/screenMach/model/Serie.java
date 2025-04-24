@@ -1,13 +1,26 @@
 package br.com.screenMach.model;
 
+import jakarta.persistence.*;
+
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "series")
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nomeDaSerie", unique = true)
     private String titulo;
+
     private String lancamento;
     private Integer totalTemporadas;
     private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
+
     private String atores;
     private String imagem;
     private String sinopse;
@@ -21,6 +34,15 @@ public class Serie {
         this.atores = dadosSerie.atores();
         this.imagem = dadosSerie.imagem();
         // this.sinopse = ConsultaChatAPI.obterTraducao(dadosSerie.sinopse()).trim();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Serie setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public String getTitulo() {
