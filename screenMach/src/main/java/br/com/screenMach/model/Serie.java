@@ -1,8 +1,6 @@
 package br.com.screenMach.model;
 
-import br.com.screenMach.service.ConsultaChatAPI;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 public class Serie {
     private String titulo;
