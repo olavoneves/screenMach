@@ -3,8 +3,11 @@ package br.com.screenMach.main;
 import br.com.screenMach.model.DadosSerie;
 import br.com.screenMach.model.DadosTemporadas;
 import br.com.screenMach.model.Serie;
+import br.com.screenMach.repository.SerieRepository;
 import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,7 +19,8 @@ public class Main {
     private final String API_KEY = "&apikey=2d6585";
     private List<DadosSerie> dadosSeries = new ArrayList<>();
 
-
+    @Autowired
+    private SerieRepository repository;
     public void exibeMenu() {
         var opcao = -1;
         while (opcao != 0) {
@@ -54,7 +58,9 @@ public class Main {
 
     private void buscarSerie() {
         DadosSerie dadosSerie = getDadosSerie();
-        dadosSeries.add(dadosSerie);
+        // dadosSeries.add(dadosSerie);
+        Serie serie = new Serie(dadosSerie);
+        repository.save();
         System.out.println(dadosSerie);
     }
 

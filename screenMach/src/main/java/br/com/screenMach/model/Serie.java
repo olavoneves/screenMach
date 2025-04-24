@@ -2,6 +2,8 @@ package br.com.screenMach.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
 @Entity
@@ -25,6 +27,9 @@ public class Serie {
     private String imagem;
     private String sinopse;
 
+    @Transient
+    private List<Episodio> listaEpisodio = new ArrayList<>();
+
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
         this.lancamento = dadosSerie.lancamento();
@@ -42,6 +47,15 @@ public class Serie {
 
     public Serie setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public List<Episodio> getListaEpisodio() {
+        return listaEpisodio;
+    }
+
+    public Serie setListaEpisodio(List<Episodio> listaEpisodio) {
+        this.listaEpisodio = listaEpisodio;
         return this;
     }
 
