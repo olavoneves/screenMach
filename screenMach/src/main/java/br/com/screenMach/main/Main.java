@@ -19,8 +19,11 @@ public class Main {
     private final String API_KEY = "&apikey=2d6585";
     private List<DadosSerie> dadosSeries = new ArrayList<>();
 
-    @Autowired
     private SerieRepository repository;
+    public Main(SerieRepository repository) {
+        this.repository = repository;
+    }
+
     public void exibeMenu() {
         var opcao = -1;
         while (opcao != 0) {
@@ -60,7 +63,7 @@ public class Main {
         DadosSerie dadosSerie = getDadosSerie();
         // dadosSeries.add(dadosSerie);
         Serie serie = new Serie(dadosSerie);
-        repository.save();
+        repository.save(serie);
         System.out.println(dadosSerie);
     }
 
@@ -88,18 +91,7 @@ public class Main {
     }
 
     private void listaSeriesBuscadas() {
-        List<Serie> listaSerie = new ArrayList<>();
-        listaSerie = dadosSeries.stream()
-                .filter(Objects::nonNull)
-                .map(d -> {
-                    try {
-                        return new Serie(d);
-                    } catch (Exception e) {
-                        System.err.println("Erro ao criar Série: " + e.getMessage());
-                        return null;
-                    }
-                })
-                .collect(Collectors.toList());
+        List<Serie> listaSerie = repository.findAll();
         listaSerie.stream()
                 .sorted(Comparator.comparing(Serie::getGenero, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .forEach(System.out::println);
