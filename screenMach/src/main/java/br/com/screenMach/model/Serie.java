@@ -27,7 +27,7 @@ public class Serie {
     private String imagem;
     private String sinopse;
 
-    @Transient
+    @OneToMany(mappedBy = "serie")
     private List<Episodio> listaEpisodio = new ArrayList<>();
 
     public Serie() {

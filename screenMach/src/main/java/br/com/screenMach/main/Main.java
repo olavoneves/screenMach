@@ -6,10 +6,7 @@ import br.com.screenMach.model.Serie;
 import br.com.screenMach.repository.SerieRepository;
 import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     Scanner scanner = new Scanner(System.in);
