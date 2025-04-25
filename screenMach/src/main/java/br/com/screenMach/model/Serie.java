@@ -27,7 +27,7 @@ public class Serie {
     private String imagem;
     private String sinopse;
 
-    @OneToMany(mappedBy = "serie")
+    @OneToMany(mappedBy = "serie", cascade =CascadeType.ALL)
     private List<Episodio> listaEpisodio = new ArrayList<>();
 
     public Serie() {

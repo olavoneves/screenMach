@@ -2,11 +2,13 @@ package br.com.screenMach.main;
 
 import br.com.screenMach.model.DadosSerie;
 import br.com.screenMach.model.DadosTemporadas;
+import br.com.screenMach.model.Episodio;
 import br.com.screenMach.model.Serie;
 import br.com.screenMach.repository.SerieRepository;
 import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     Scanner scanner = new Scanner(System.in);
@@ -15,6 +17,7 @@ public class Main {
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=2d6585";
     private List<DadosSerie> dadosSeries = new ArrayList<>();
+    private List<Serie> listaSerie = new ArrayList<>();
 
     private SerieRepository repository;
     public Main(SerieRepository repository) {
@@ -72,23 +75,42 @@ public class Main {
     }
 
     private void buscarEpisodioPorSerie() {
-        DadosSerie dadosSerie = getDadosSerie();
-        List<DadosTemporadas> listaTemporadas = new ArrayList<>();
+        listaSeriesBuscadas();
+        System.out.print("Escolha uma série pelo nome: ");
+        var nomeSerie = scanner.nextLine();
 
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
-            try {
-                var json = consumoAPI.obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
-                DadosTemporadas dadosTemporadas = converteDados.obterDados(json, DadosTemporadas.class);
-                listaTemporadas.add(dadosTemporadas);
-            } catch (Exception e) {
-                System.err.println("Erro ao processar temporada " + i + ": " + e.getMessage());
+        Optional<Serie> firstSerie = listaSerie.stream()
+                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                .findFirst();
+
+        if (firstSerie.isPresent()) {
+            var serieEncontrada = firstSerie.get();
+            List<DadosTemporadas> listaTemporadas = new ArrayList<>();
+
+            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+                try {
+                    var json = consumoAPI.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+                    DadosTemporadas dadosTemporadas = converteDados.obterDados(json, DadosTemporadas.class);
+                    listaTemporadas.add(dadosTemporadas);
+                } catch (Exception e) {
+                    System.err.println("Erro ao processar temporada " + i + ": " + e.getMessage());
+                }
             }
+            listaTemporadas.forEach(System.out::println);
+
+            List<Episodio> episodios = listaTemporadas.stream()
+                    .flatMap(d -> d.episodios().stream()
+                            .map(e -> new Episodio(d.number(), e)))
+                    .collect(Collectors.toList());
+            serieEncontrada.setListaEpisodio(episodios);
+            repository.save(serieEncontrada);
+        } else {
+            System.out.println("Série não encontrada!");
         }
-        listaTemporadas.forEach(System.out::println);
     }
 
     private void listaSeriesBuscadas() {
-        List<Serie> listaSerie = repository.findAll();
+        listaSerie = repository.findAll();
         listaSerie.stream()
                 .sorted(Comparator.comparing(Serie::getGenero, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .forEach(System.out::println);
