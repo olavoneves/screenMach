@@ -1,9 +1,6 @@
 package br.com.screenMach.main;
 
-import br.com.screenMach.model.DadosSerie;
-import br.com.screenMach.model.DadosTemporadas;
-import br.com.screenMach.model.Episodio;
-import br.com.screenMach.model.Serie;
+import br.com.screenMach.model.*;
 import br.com.screenMach.repository.SerieRepository;
 import br.com.screenMach.service.ConsumoAPI;
 import br.com.screenMach.service.ConverteDados;
@@ -28,7 +25,7 @@ public class Main {
         var opcao = -1;
         while (opcao != 0) {
             try {
-                var menu = "╔════════════════════════════╗\n║                            ║\n║     Bem-vindo ao           ║\n║        Screen Match        ║\n║                            ║\n║   > 1. Buscar Séries       ║\n║   > 2. Buscar Episódios    ║\n║   > 3. Listar Séries       ║\n║                            ║\n║   > 0. Sair                ║\n║                            ║\n╚════════════════════════════╝\n > ";
+                var menu = "╔════════════════════════════╗\n║                            ║\n║     Bem-vindo ao           ║\n║        Screen Match        ║\n║                            ║\n║   > 1. Buscar Séries       ║\n║   > 2. Buscar Episódios    ║\n║   > 3. Listar Séries       ║\n║   > 4. Buscar por Título   ║\n║   > 5. Buscar por Atores   ║\n║   > 6. Top 10 séries       ║\n║   > 7. Buscar Categoria    ║\n║   > 8. Buscar Categoria    ║\n║                            ║\n║   > 0. Sair                ║\n║                            ║\n╚════════════════════════════╝\n > ";
 
                 System.out.print(menu);
                 opcao = scanner.nextInt();
@@ -43,6 +40,21 @@ public class Main {
                         break;
                     case 3:
                         listaSeriesBuscadas();
+                        break;
+                    case 4:
+                        buscarSeriePorTitulo();
+                        break;
+                    case 5:
+                        buscarSeriePorAtores();
+                        break;
+                    case 6:
+                        buscarTopDezSeries();
+                        break;
+                    case 7:
+                        buscarSeriesPorCategoria();
+                        break;
+                    case 8:
+                        buscarSeriesPorMaxTemporadas();
                         break;
                     case 0:
                         System.out.println("Saindo...");
@@ -79,9 +91,7 @@ public class Main {
         System.out.print("Escolha uma série pelo nome: ");
         var nomeSerie = scanner.nextLine();
 
-        Optional<Serie> firstSerie = listaSerie.stream()
-                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
-                .findFirst();
+        Optional<Serie> firstSerie = repository.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (firstSerie.isPresent()) {
             var serieEncontrada = firstSerie.get();
@@ -114,5 +124,79 @@ public class Main {
         listaSerie.stream()
                 .sorted(Comparator.comparing(Serie::getGenero, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .forEach(System.out::println);
+    }
+
+    private void buscarSeriePorTitulo() {
+        System.out.print("Escolha uma série pelo nome: ");
+        var nomeSerie = scanner.nextLine();
+        Optional<Serie> serieBuscada = repository.findByTituloContainingIgnoreCase(nomeSerie);
+
+        if (serieBuscada.isPresent()) {
+            System.out.println("*****************************************" +
+                    "\nDados da Série: " +
+                    serieBuscada.get());
+        } else {
+            System.out.println("*****************************************" +
+                    "\nSérie não encontrada!");
+        }
+    }
+
+    private void buscarSeriePorAtores() {
+        System.out.print("Escolha uma série pelo nome do ator: ");
+        var nomeAtor = scanner.nextLine();
+
+        System.out.print("Você gostaria das séries com avaliações maiores que 8.5 ? [S/N]: ");
+        var avaliacaoSerie = scanner.nextLine().toUpperCase();
+
+        if (avaliacaoSerie.equals("S")) {
+            List<Serie> serieBuscada = repository.findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, 8.5);
+            System.out.println("*****************************************\n");
+            System.out.println("Melhores séries que " + nomeAtor + " trabalhou: ");
+            serieBuscada.forEach(s -> System.out.println("Série: " + s.getTitulo() + ", avaliação: " + s.getAvaliacao()));
+        } else {
+            List<Serie> serieBuscada = repository.findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, 0.0);
+            System.out.println("*****************************************\n");
+            System.out.println("Séries que " + nomeAtor + " trabalhou: ");
+            serieBuscada.forEach(s -> System.out.println("Série: " + s.getTitulo() + ", avaliação: " + s.getAvaliacao()));
+        }
+    }
+
+    private void buscarTopDezSeries() {
+        List<Serie> topSeries = repository.findTop10ByOrderByAvaliacaoDesc();
+        System.out.println("*****************************************");
+        System.out.println("*             Top 10 Séries             *");
+        System.out.println("*****************************************");
+        topSeries.forEach(s -> System.out.println("Série: " + s.getTitulo() + ", avaliação: " + s.getAvaliacao()));
+    }
+
+    private void buscarSeriesPorCategoria() {
+        System.out.print("Deseja buscar séries a partir de qual categoria/gênero: ");
+        var categoriaSerie = scanner.nextLine();
+        Categoria categoria = Categoria.fromPortugues(categoriaSerie);
+        List<Serie> seriesPorCategoria = repository.findByGenero(categoria);
+        System.out.println("*****************************************");
+        System.out.println("Séries da categoria: " + categoriaSerie);
+        seriesPorCategoria.forEach(System.out::println);
+    }
+
+    private void buscarSeriesPorMaxTemporadas() {
+        System.out.print("Digite a quantidade maxima de temporadas que você gostaria de assistir: ");
+        var totalTemporadas = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Você gostaria das séries com avaliações maiores que 8.5 ? [S/N]: ");
+        var avaliacaoSerie = scanner.nextLine().toUpperCase();
+
+        if (avaliacaoSerie.equals("S")) {
+            List<Serie> seriesMaxTemporadas = repository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalTemporadas, 8.5);
+            System.out.println("*********************************************************************\n");
+            System.out.println("Séries encontradas com " + totalTemporadas + " ou menos temporadas.");
+            seriesMaxTemporadas.forEach(s -> System.out.println("Série: " + s.getTitulo() + ", temporadas: " + s.getTotalTemporadas() + ", avaliação: " + s.getAvaliacao() + ", gênero: " + s.getGenero()));
+        } else {
+            List<Serie> seriesMaxTemporadas = repository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalTemporadas, 0.0);
+            System.out.println("*********************************************************************\n");
+            System.out.println("Séries encontradas com " + totalTemporadas + " ou menos temporadas.");
+            seriesMaxTemporadas.forEach(s -> System.out.println("Série: " + s.getTitulo() + ", temporadas: " + s.getTotalTemporadas() + ", avaliação: " + s.getAvaliacao() + ", gênero: " + s.getGenero()));
+        }
     }
 }
