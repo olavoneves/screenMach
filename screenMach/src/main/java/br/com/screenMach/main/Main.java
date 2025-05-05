@@ -26,7 +26,7 @@ public class Main {
         var opcao = -1;
         while (opcao != 0) {
             try {
-                var menu = "╔════════════════════════════╗\n║                            ║\n║     Bem-vindo ao           ║\n║        Screen Match        ║\n║                            ║\n║   > 1. Buscar Séries       ║\n║   > 2. Buscar Episódios    ║\n║   > 3. Listar Séries       ║\n║   > 4. Buscar por Título   ║\n║   > 5. Buscar por Atores   ║\n║   > 6. Top 10 séries       ║\n║   > 7. Buscar Categoria    ║\n║   > 8. Buscar Categoria    ║\n║   > 9. Episodio por nome   ║\n║   > 10.Top 10 episódios    ║\n║                            ║\n║   > 0. Sair                ║\n║                            ║\n╚════════════════════════════╝\n > ";
+                var menu = "╔════════════════════════════╗\n║                            ║\n║     Bem-vindo ao           ║\n║        Screen Match        ║\n║                            ║\n║   > 1. Buscar Séries       ║\n║   > 2. Buscar Episódios    ║\n║   > 3. Listar Séries       ║\n║   > 4. Buscar por Título   ║\n║   > 5. Buscar por Atores   ║\n║   > 6. Top 10 séries       ║\n║   > 7. Buscar Categoria    ║\n║   > 8. Buscar Categoria    ║\n║   > 9. Episodio por nome   ║\n║   > 10.Top 10 episódios    ║\n║   > 11.Episódios por data  ║\n║                            ║\n║   > 0. Sair                ║\n║                            ║\n╚════════════════════════════╝\n > ";
 
                 System.out.print(menu);
                 opcao = scanner.nextInt();
@@ -62,6 +62,9 @@ public class Main {
                         break;
                     case 10:
                         buscarTopDezEpisodios();
+                        break;
+                    case 11:
+                        buscarEpisodiosPorData();
                         break;
                     case 0:
                         System.out.println("Saindo...");
@@ -227,6 +230,20 @@ public class Main {
             System.out.println("*****************************************");
             topEpisodios.forEach(e ->
                     System.out.printf("Série: %s Temporada: %s, Episódio: %s, Avaliação: %s\n", e.getSerie().getTitulo(), e.getTemporada(), e.getTitulo(), e.getAvaliacao()));
+        }
+    }
+
+    private void buscarEpisodiosPorData() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+            System.out.print("Digite ano limite de lançamento para busca: ");
+            var anoLancamento = scanner.nextInt();
+            scanner.nextLine();
+
+            List<Episodio> episodiosPorAno = repository.episodiosPorSerieEAno(serie, anoLancamento);
+            episodiosPorAno.forEach(e ->
+                    System.out.printf("Série: %s Temporada: %s, Episódio: %s, Data Lançamento: %s\n", e.getSerie().getTitulo(), e.getTemporada(), e.getTitulo(), e.getDataLancamento()));
         }
     }
 }
