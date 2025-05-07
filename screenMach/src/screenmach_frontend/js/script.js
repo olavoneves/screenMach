@@ -2,7 +2,7 @@ import getDados from "./getDados.js";
 
 // Mapeia os elementos DOM que você deseja atualizar
 const elementos = {
-    top5: document.querySelector('[data-name="top5"]'),
+    top5: document.querySelector('[data-name="top10"]'),
     lancamentos: document.querySelector('[data-name="lancamentos"]'),
     series: document.querySelector('[data-name="series"]')
 };
@@ -73,12 +73,12 @@ categoriaSelect.addEventListener('change', function () {
 // Array de URLs para as solicitações
 geraSeries();
 function geraSeries() {
-    const urls = ['/series/top5', '/series/lancamentos', '/series'];
+    const urls = ['/series/top10', '/series/lancamentos', '/series'];
 
     // Faz todas as solicitações em paralelo
     Promise.all(urls.map(url => getDados(url)))
         .then(data => {
-            criarListaFilmes(elementos.top5, data[0]);
+            criarListaFilmes(elementos.top10, data[0]);
             criarListaFilmes(elementos.lancamentos, data[1]);
             criarListaFilmes(elementos.series, data[2].slice(0, 5));
         })
