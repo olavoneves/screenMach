@@ -1,5 +1,6 @@
 package br.com.screenMach.repository;
 
+import br.com.screenMach.dto.SerieDTO;
 import br.com.screenMach.model.Categoria;
 import br.com.screenMach.model.Episodio;
 import br.com.screenMach.model.Serie;
@@ -29,4 +30,7 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     @Query("SELECT e FROM Serie s JOIN s.listaEpisodio e WHERE s = :serie AND YEAR(e.dataLancamento) >= :anoLancamento")
     List<Episodio> episodiosPorSerieEAno(Serie serie, int anoLancamento);
+
+    @Query("SELECT s FROM Serie s WHERE s.lancamento >= :anoDeBusca")
+    List<SerieDTO> buscarPorLancamentos(String anoDeBusca);
 }

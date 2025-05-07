@@ -1,24 +1,32 @@
 package br.com.screenMach.controller;
 
 import br.com.screenMach.dto.SerieDTO;
-import br.com.screenMach.repository.SerieRepository;
+import br.com.screenMach.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/series")
 public class SerieController {
 
     @Autowired
-    private SerieRepository repository;
+    private SerieService service;
 
-    @GetMapping("/series")
+    @GetMapping
     public List<SerieDTO> obterSeries() {
-        return repository.findAll().stream()
-                .map(s -> new SerieDTO(s.getId(), s.getTitulo(), s.getLancamento(), s.getTotalTemporadas(), s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getImagem(), s.getSinopse()))
-                .collect(Collectors.toList());
+        return service.obterSeries();
+    }
+
+    @GetMapping("/top10")
+    public List<SerieDTO> obterTop10() {
+        return service.obterTop10();
+    }
+
+    @GetMapping("/lancamentos")
+    public List<SerieDTO> obterLancamentos() {
+        return service.obterLancamentos();
     }
 }
