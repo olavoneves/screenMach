@@ -49,7 +49,7 @@ function carregarEpisodios() {
 
                 const listaHTML = episodiosTemporadaAtual.map(serie => `
                     <li>
-                        ${serie.numeroEpisodio} - ${serie.titulo}
+                        ${serie.titulo} - ${serie.avaliacao}
                     </li>
                 `).join('');
                 ul.innerHTML = listaHTML;
