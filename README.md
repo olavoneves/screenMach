@@ -31,7 +31,7 @@
 - Renderização dinâmica dos dados em tempo real.  
 - Tratamento assíncrono de respostas e feedback visual.  
 
-🔗 **Repositório do Projeto**: [Acesse aqui](https://lnkd.in/gT9dkA2E)  
+🔗 **Repositório do Projeto**: [Acesse aqui]([https://lnkd.in/gT9dkA2E](https://github.com/olavoneves/screenMach.git))  
 
 ## 🔜 **Próximos Passos**  
 ✅ **Autenticação/Autorização**: Implementar **JWT** e **OAuth2**.  
@@ -48,4 +48,4 @@
 ---
 
 ✨ **Obrigado à Alura, Jacqueline Oliveira e Iasmin Araújo pelo excelente conteúdo!**  
-📫 **Vamos conversar?** [Meu LinkedIn](#) | [Portfólio](#) *(links fictícios)*  
+📫 **Vamos conversar?** [Meu LinkedIn](www.linkedin.com/in/olavo-neves-48630b2b3)  
